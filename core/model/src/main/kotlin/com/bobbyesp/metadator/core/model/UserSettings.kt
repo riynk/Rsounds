@@ -19,7 +19,7 @@ data class UserSettings(
 ) {
     companion object {
         /** The brand's violet (`BrandColors.Violet`). */
-        const val DEFAULT_SEED_COLOR: Int = 0xFF381080.toInt()
+        const val DEFAULT_SEED_COLOR: Int = 0xFFFF0033.toInt()
 
         /** The seed until 2.x, still offered for whoever prefers the old colors. */
         const val LEGACY_SEED_COLOR: Int = 0xFF415F76.toInt()
