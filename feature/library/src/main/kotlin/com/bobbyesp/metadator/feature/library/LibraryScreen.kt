@@ -531,13 +531,11 @@ private fun LibraryContent(
                     ) { tab ->
                         when (tab) {
                             LibraryTab.Songs ->
-                                SongList(
-                                    tracks = state.tracks,
-                                    selection = state.selection,
-                                    playingId = state.playingId,
-                                    playbackRunning = state.playbackRunning,
+                                HomeMusicFeed(
+                                    state = state,
                                     onIntent = onIntent,
                                     onOpenTrack = onOpenTrack,
+                                    onOpenCollection = onOpenCollection,
                                 )
 
                             LibraryTab.Albums -> AlbumGrid(state.albums, onOpenCollection)
@@ -684,6 +682,133 @@ private fun FilterRow(
                     label = format.uppercase(),
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalFoundationApi::class)
+@Composable
+private fun HomeMusicFeed(
+    state: LibraryState,
+    onIntent: (LibraryIntent) -> Unit,
+    onOpenTrack: (Track) -> Unit,
+    onOpenCollection: (TrackCollection) -> Unit,
+) {
+    val selecting = state.selecting
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            start = Spacing.screen,
+            end = Spacing.screen,
+            bottom = Spacing.floatingClearance,
+        ),
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
+    ) {
+        item(key = "home-hero", contentType = "home-hero") {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = Spacing.large),
+                verticalArrangement = Arrangement.spacedBy(Spacing.small),
+            ) {
+                Text(
+                    "Your music",
+                    style = MaterialTheme.typography.displaySmallEmphasized,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    "${state.totalTracks} songs · ${state.albums.size} albums · ${state.artists.size} artists",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Row(
+                    modifier = Modifier.padding(top = Spacing.small),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilledTonalButton(
+                        onClick = { onIntent(LibraryIntent.PlayAll(shuffle = true)) },
+                        shapes = ButtonDefaults.shapes(),
+                    ) {
+                        Icon(Icons.Rounded.Shuffle, null, Modifier.size(ButtonDefaults.IconSize))
+                        Text(
+                            stringResource(R.string.shuffle_all),
+                            Modifier.padding(start = ButtonDefaults.IconSpacing),
+                        )
+                    }
+                    FilledIconButton(
+                        onClick = { onIntent(LibraryIntent.PlayAll(shuffle = false)) },
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            Icons.Rounded.PlayArrow,
+                            contentDescription = stringResource(R.string.play_all),
+                        )
+                    }
+                }
+            }
+        }
+        if (state.albums.isNotEmpty()) {
+            item(key = "album-heading", contentType = "section-heading") {
+                Text(
+                    "Albums",
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    modifier = Modifier.padding(top = Spacing.medium),
+                )
+            }
+            item(key = "album-carousel", contentType = "album-carousel") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    state.albums.take(12).forEach { album ->
+                        CollectionCard(
+                            title = album.title,
+                            subtitle = album.artist,
+                            artwork = album.artworkRef?.uri,
+                            onClick = { onOpenCollection(album) },
+                            modifier = Modifier.widthIn(min = 156.dp, max = 176.dp),
+                        )
+                    }
+                }
+            }
+        }
+        item(key = "songs-heading", contentType = "section-heading") {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = Spacing.medium, bottom = Spacing.small),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "All songs",
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    modifier = Modifier.weight(1f),
+                )
+                Text(
+                    state.tracks.size.toString(),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        itemsIndexed(
+            state.tracks,
+            key = { _, track -> track.id.value },
+            contentType = { _, _ -> "track" },
+        ) { index, track ->
+            val isPlaying = track.id == state.playingId
+            TrackListItem(
+                track = track,
+                selected = track.id in state.selection,
+                selecting = selecting,
+                isPlaying = isPlaying,
+                isPlaybackRunning = isPlaying && state.playbackRunning,
+                shapes = GroupShapes.listItemShapes(index, state.tracks.size),
+                onClick = {
+                    if (selecting) onIntent(LibraryIntent.ToggleSelection(track.id))
+                    else onOpenTrack(track)
+                },
+                onLongClick = { onIntent(LibraryIntent.ToggleSelection(track.id)) },
+                onPlay = { onIntent(LibraryIntent.Play(track)) },
+                modifier = Modifier.animateItem(),
+            )
         }
     }
 }
