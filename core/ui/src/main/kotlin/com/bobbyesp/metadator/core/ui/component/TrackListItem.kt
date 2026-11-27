@@ -109,7 +109,8 @@ fun TrackListItem(
                                 PlayingBars(
                                     playing = isPlaybackRunning,
                                     color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.semantics { contentDescription = nowPlaying },
+                                    modifier =
+                                        Modifier.semantics { contentDescription = nowPlaying },
                                 )
                             } else {
                                 Icon(
