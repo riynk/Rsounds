@@ -84,6 +84,17 @@ fun MetadatorTheme(settings: UserSettings = UserSettings(), content: @Composable
             secondary = Color(0xFFFFB1C0),
             onSecondary = Color(0xFF3E0010),
             tertiary = Color(0xFFFF8A9B),
+            background = if (isDark) Color(0xFF0F0F0F) else built.scheme.background,
+            onBackground = if (isDark) Color.White else built.scheme.onBackground,
+            surface = if (isDark) Color(0xFF0F0F0F) else built.scheme.surface,
+            onSurface = if (isDark) Color.White else built.scheme.onSurface,
+            onSurfaceVariant = if (isDark) Color(0xFFAAAAAA) else built.scheme.onSurfaceVariant,
+            surfaceVariant = if (isDark) Color(0xFF272727) else built.scheme.surfaceVariant,
+            surfaceContainerLowest = if (isDark) Color(0xFF0F0F0F) else built.scheme.surfaceContainerLowest,
+            surfaceContainerLow = if (isDark) Color(0xFF181818) else built.scheme.surfaceContainerLow,
+            surfaceContainer = if (isDark) Color(0xFF212121) else built.scheme.surfaceContainer,
+            surfaceContainerHigh = if (isDark) Color(0xFF272727) else built.scheme.surfaceContainerHigh,
+            surfaceContainerHighest = if (isDark) Color(0xFF303030) else built.scheme.surfaceContainerHighest,
         )
     }
     val themeColors = remember(built, cache) { ThemeColors(built, cache) }
