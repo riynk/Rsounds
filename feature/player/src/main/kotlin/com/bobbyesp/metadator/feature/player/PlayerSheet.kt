@@ -308,7 +308,9 @@ fun PlayerSheet(
                                         .padding(
                                             bottom =
                                                 Spacing.medium +
-                                                    (if (bottomNavigationVisible) BottomNavigationClearance else 0.dp)
+                                                    (if (bottomNavigationVisible)
+                                                        BottomNavigationClearance
+                                                    else 0.dp)
                                         )
                                         .widthIn(max = BarMaxWidth)
                                         .fillMaxWidth()
