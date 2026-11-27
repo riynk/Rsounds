@@ -497,6 +497,7 @@ private fun PermissionNeeded(
 private fun ExploreCollectionsFeed(
     state: LibraryState,
     onOpenCollection: (TrackCollection) -> Unit,
+    onRescan: () -> Unit,
 ) {
     val hasCollections =
         state.albums.isNotEmpty() || state.artists.isNotEmpty() || state.folders.isNotEmpty()
@@ -508,7 +509,7 @@ private fun ExploreCollectionsFeed(
                 icon = Icons.Rounded.LibraryMusic,
                 actionText = stringResource(R.string.rescan_library),
                 actionIcon = Icons.Rounded.Refresh,
-                onAction = {},
+                onAction = onRescan,
             )
         }
         return
@@ -817,7 +818,12 @@ private fun ExploreMusicFeed(
                         )
                     }
 
-                else -> ExploreCollectionsFeed(state, onOpenCollection)
+                else ->
+                    ExploreCollectionsFeed(
+                        state = state,
+                        onOpenCollection = onOpenCollection,
+                        onRescan = { onIntent(LibraryIntent.Refresh) },
+                    )
             }
         }
     }
