@@ -455,7 +455,6 @@ private fun LibraryContent(
     onIntent: (LibraryIntent) -> Unit,
     onOpenTrack: (Track) -> Unit,
     onOpenCollection: (TrackCollection) -> Unit,
-    onOpenTrack: (Track) -> Unit,
 ) {
     val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<IntOffset>()
     val effects = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
