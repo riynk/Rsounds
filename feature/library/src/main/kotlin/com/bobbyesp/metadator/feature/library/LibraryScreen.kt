@@ -194,7 +194,6 @@ internal fun LibraryScreen(
                             onIntent = onIntent,
                             onOpenTrack = onOpenTrack,
                             onOpenCollection = onOpenCollection,
-                            onOpenTrack = onOpenTrack,
                         )
                 }
             }
