@@ -108,7 +108,7 @@ internal fun CollectionScreen(
                     end = Spacing.screen,
                     bottom = Spacing.floatingClearance,
                 ),
-            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+            verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
             item(key = "header", contentType = "header") {
                 CollectionHeader(

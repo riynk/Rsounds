@@ -94,7 +94,7 @@ fun CoverCard(
                 model = cover,
                 contentDescription = stringResource(CoreUiR.string.cover),
                 modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-                shape = MaterialTheme.shapes.extraLarge,
+                shape = MaterialTheme.shapes.medium,
             )
             if (loadingCover) LoadingIndicator()
             androidx.compose.animation.AnimatedVisibility(

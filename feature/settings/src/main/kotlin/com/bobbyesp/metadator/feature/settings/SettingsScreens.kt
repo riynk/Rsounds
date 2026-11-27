@@ -108,7 +108,7 @@ import com.bobbyesp.metadator.core.ui.viewmodel.LocalSnackbarHostState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-private const val APP_NAME = "Metadator"
+private const val APP_NAME = "Rsounds"
 private const val SOURCE_URL = "https://github.com/BobbyESP/Metadator"
 private const val ISSUES_URL = "https://github.com/BobbyESP/Metadator/issues"
 private const val PLAY_URL = "https://play.google.com/store/apps/details?id=com.bobbyesp.metadator"

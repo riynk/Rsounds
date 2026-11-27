@@ -83,7 +83,7 @@ fun TrackListItem(
         verticalAlignment = Alignment.CenterVertically,
         colors =
             ListItemDefaults.segmentedColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                containerColor = MaterialTheme.colorScheme.surface
             ),
         leadingContent = { TrackArtwork(track, selected) },
         supportingContent = { TrackSubtitle(track) },
@@ -221,7 +221,7 @@ fun CollectionCard(
         onClick = onClick,
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        color = MaterialTheme.colorScheme.surface,
     ) {
         Column {
             ArtworkImage(

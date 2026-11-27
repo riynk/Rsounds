@@ -78,6 +78,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
@@ -106,8 +107,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.bobbyesp.metadator.core.designsystem.component.ActionChip
 import com.bobbyesp.metadator.core.designsystem.component.ActionMenu
-import com.bobbyesp.metadator.core.designsystem.component.Choice
-import com.bobbyesp.metadator.core.designsystem.component.ConnectedChoices
 import com.bobbyesp.metadator.core.designsystem.component.FloatingActionToolbar
 import com.bobbyesp.metadator.core.designsystem.component.FloatingActionToolbarDefaults
 import com.bobbyesp.metadator.core.designsystem.component.ItemIcon
@@ -458,21 +457,23 @@ private fun LibraryContent(
 ) {
     val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<IntOffset>()
     val effects = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
-    val tabLabels = LibraryTab.entries.map { stringResource(it.label) }
-    val tabs =
-        remember(tabLabels) {
-            LibraryTab.entries.mapIndexed { index, tab -> Choice(tab, tabLabels[index], tab.icon) }
-        }
     Column(Modifier.fillMaxSize()) {
-        ConnectedChoices(
-            choices = tabs,
-            selected = state.tab,
-            onSelect = { onIntent(LibraryIntent.SelectTab(it)) },
+        Row(
             modifier =
                 Modifier.fillMaxWidth()
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = Spacing.screen),
-        )
+                    .padding(horizontal = Spacing.screen, vertical = Spacing.small),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LibraryTab.entries.forEach { tab ->
+                LibraryCategoryChip(
+                    label = stringResource(tab.label),
+                    selected = state.tab == tab,
+                    onClick = { onIntent(LibraryIntent.SelectTab(tab)) },
+                )
+            }
+        }
         FilterRow(
             sort = state.sort,
             needsAttention = state.filter.needsAttention,
@@ -557,6 +558,31 @@ private fun LibraryContent(
                     }
             }
         }
+    }
+}
+
+@Composable
+private fun LibraryCategoryChip(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color =
+            if (selected) MaterialTheme.colorScheme.onSurface
+            else MaterialTheme.colorScheme.surfaceContainerHigh,
+        contentColor =
+            if (selected) MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.onSurface,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLargeEmphasized,
+            modifier = Modifier.padding(horizontal = Spacing.large, vertical = Spacing.small),
+            maxLines = 1,
+        )
     }
 }
 
@@ -681,7 +707,7 @@ private fun SongList(
                 end = Spacing.screen,
                 bottom = Spacing.floatingClearance,
             ),
-        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         item(key = "header", contentType = "header") {
             Row(
@@ -788,7 +814,7 @@ private fun CollectionList(
                 end = Spacing.screen,
                 bottom = Spacing.floatingClearance,
             ),
-        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         itemsIndexed(
             collections,
@@ -802,7 +828,7 @@ private fun CollectionList(
                 verticalAlignment = Alignment.CenterVertically,
                 colors =
                     ListItemDefaults.segmentedColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        containerColor = MaterialTheme.colorScheme.surface
                     ),
                 leadingContent = {
                     if (collection.artworkRef != null && collection !is TrackCollection.Folder) {

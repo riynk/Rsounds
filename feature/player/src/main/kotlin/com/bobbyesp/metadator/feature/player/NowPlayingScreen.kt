@@ -259,7 +259,7 @@ internal fun LazyListScope.upNextItems(
             verticalAlignment = Alignment.CenterVertically,
             colors =
                 ListItemDefaults.segmentedColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
             leadingContent = { ArtworkImage(next.artworkRef?.uri, null, Modifier.size(44.dp)) },
             supportingContent = {
