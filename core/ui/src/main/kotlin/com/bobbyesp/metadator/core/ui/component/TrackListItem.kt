@@ -24,8 +24,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +41,10 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,6 +78,7 @@ fun TrackListItem(
     selecting: Boolean = false,
     isPlaying: Boolean = false,
     isPlaybackRunning: Boolean = isPlaying,
+    onEdit: (() -> Unit)? = null,
 ) {
     val spatial = MaterialTheme.motionScheme.fastSpatialSpec<Float>()
     val selectedLabel = stringResource(R.string.selected)
@@ -94,20 +103,49 @@ fun TrackListItem(
                 label = "TrackTrailing",
             ) { isSelecting ->
                 if (!isSelecting) {
-                    IconButton(onClick = onPlay, shapes = IconButtonDefaults.shapes()) {
-                        if (isPlaying) {
-                            val nowPlaying = stringResource(R.string.now_playing)
-                            PlayingBars(
-                                playing = isPlaybackRunning,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.semantics { contentDescription = nowPlaying },
-                            )
-                        } else {
-                            Icon(
-                                Icons.Rounded.PlayArrow,
-                                contentDescription = stringResource(R.string.play),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = onPlay, shapes = IconButtonDefaults.shapes()) {
+                            if (isPlaying) {
+                                val nowPlaying = stringResource(R.string.now_playing)
+                                PlayingBars(
+                                    playing = isPlaybackRunning,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.semantics { contentDescription = nowPlaying },
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Rounded.PlayArrow,
+                                    contentDescription = stringResource(R.string.play),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                        if (onEdit != null) {
+                            var menuExpanded by remember { mutableStateOf(false) }
+                            Box {
+                                IconButton(
+                                    onClick = { menuExpanded = true },
+                                    shapes = IconButtonDefaults.shapes(),
+                                ) {
+                                    Icon(
+                                        Icons.Rounded.MoreVert,
+                                        contentDescription = stringResource(R.string.more_options),
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = menuExpanded,
+                                    onDismissRequest = { menuExpanded = false },
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.edit_tags)) },
+                                        leadingIcon = { Icon(Icons.Rounded.Edit, null) },
+                                        onClick = {
+                                            menuExpanded = false
+                                            onEdit()
+                                        },
+                                    )
+                                }
+                            }
                         }
                     }
                 }
