@@ -14,11 +14,12 @@ import com.bobbyesp.metadator.core.designsystem.R
  * for where Metadator shows itself as a brand, and for the default seed.
  */
 object BrandColors {
-    val Violet = Color(0xFF381080)
-    val Lavender = Color(0xFFF1E9FF)
+    val YouTubeRed = Color(0xFFFF0033)
+    val Violet = YouTubeRed
+    val Lavender = Color(0xFFFFE5EA)
 
-    /** An accent for marketing and small touches only: it is not readable on lavender. */
-    val Acid = Color(0xFFDFFF00)
+    /** A vivid accent for small brand details. */
+    val Acid = Color(0xFFFF0033)
 }
 
 /** The brand glyph, a file's frame around five beats of a waveform, to tint like any icon. */
