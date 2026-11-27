@@ -210,7 +210,8 @@ internal fun LibraryScreen(
                                     CenteredPlaceholder {
                                         PlaceholderCard(
                                             title = stringResource(R.string.empty_library_title),
-                                            description = stringResource(R.string.empty_library_description),
+                                            description =
+                                                stringResource(R.string.empty_library_description),
                                             icon = Icons.Rounded.LibraryMusic,
                                             actionText = stringResource(R.string.rescan_library),
                                             actionIcon = Icons.Rounded.Refresh,
