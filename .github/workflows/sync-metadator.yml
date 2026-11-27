@@ -1,0 +1,47 @@
+name: Sync Metadator into Rsounds
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: metadator-sync-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Replace Rsounds with upstream Metadator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Rsounds
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Clone upstream Metadator
+        run: |
+          git clone --depth 1 https://github.com/BobbyESP/Metadator.git "$RUNNER_TEMP/Metadator"
+
+      - name: Replace repository files
+        run: |
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/sync-metadator.yml' \
+            "$RUNNER_TEMP/Metadator/" "$GITHUB_WORKSPACE/"
+
+      - name: Commit synchronized source
+        run: |
+          git config user.name "riynk"
+          git config user.email "riynkazis@gmail.com"
+          git add --all
+          if git diff --cached --quiet; then
+            echo "Metadator is already up to date."
+            exit 0
+          fi
+          git commit -m "chore: sync source from BobbyESP/Metadator"
+          git push origin HEAD:main
