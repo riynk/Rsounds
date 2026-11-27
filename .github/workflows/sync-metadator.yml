@@ -12,7 +12,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write
 
 concurrency:
   group: metadator-sync-main
@@ -44,7 +43,7 @@ jobs:
         run: |
           rsync -a --delete \
             --exclude='.git/' \
-            --exclude='.github/workflows/sync-metadator.yml' \
+            --exclude='.github/workflows/' \
             "$RUNNER_TEMP/Metadator/" "$GITHUB_WORKSPACE/"
 
       - name: Commit synchronized source
