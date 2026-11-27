@@ -491,8 +491,6 @@ private fun PermissionNeeded(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 @Composable
 private fun ExploreCollectionsFeed(
     state: LibraryState,
@@ -601,6 +599,8 @@ private fun ExploreCollectionsFeed(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun LibraryContent(
     state: LibraryState,
     onIntent: (LibraryIntent) -> Unit,
