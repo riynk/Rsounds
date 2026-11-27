@@ -695,11 +695,12 @@ private fun HomeMusicFeed(
     val selecting = state.selecting
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            start = Spacing.screen,
-            end = Spacing.screen,
-            bottom = Spacing.floatingClearance,
-        ),
+        contentPadding =
+            PaddingValues(
+                start = Spacing.screen,
+                end = Spacing.screen,
+                bottom = Spacing.floatingClearance,
+            ),
         verticalArrangement = Arrangement.spacedBy(Spacing.medium),
     ) {
         item(key = "home-hero", contentType = "home-hero") {
@@ -771,7 +772,8 @@ private fun HomeMusicFeed(
         }
         item(key = "songs-heading", contentType = "section-heading") {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = Spacing.medium, bottom = Spacing.small),
+                modifier =
+                    Modifier.fillMaxWidth().padding(top = Spacing.medium, bottom = Spacing.small),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
