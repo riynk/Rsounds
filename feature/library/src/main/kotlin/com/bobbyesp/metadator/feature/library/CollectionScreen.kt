@@ -125,9 +125,10 @@ internal fun CollectionScreen(
                 val isPlaying = track.id == playingId
                 TrackListItem(
                     track = track,
-                    onClick = { onOpenTrack(track) },
+                    onClick = { onPlay(tracks, index, false) },
                     onLongClick = { onOpenTrack(track) },
                     onPlay = { onPlay(tracks, index, false) },
+                    onEdit = { onOpenTrack(track) },
                     isPlaying = isPlaying,
                     isPlaybackRunning = isPlaying && isPlaybackRunning,
                     shapes = GroupShapes.listItemShapes(index, tracks.size),
