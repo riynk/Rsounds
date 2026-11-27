@@ -88,8 +88,8 @@ fun MetadatorApp(onExit: () -> Unit) {
     val snackbarClearance by
         animateDpAsState(
             targetValue =
-                (if (showPlayer && playerActive) PlayerSheetDefaults.CollapsedClearance else Spacing.medium) +
-                    (if (top == Library) 80.dp else 0.dp),
+                (if (showPlayer && playerActive) PlayerSheetDefaults.CollapsedClearance
+                else Spacing.medium) + (if (top == Library) 80.dp else 0.dp),
             label = "SnackbarClearance",
         )
 
