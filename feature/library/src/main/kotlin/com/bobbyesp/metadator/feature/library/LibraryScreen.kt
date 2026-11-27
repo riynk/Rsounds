@@ -187,7 +187,12 @@ internal fun LibraryScreen(
         bottomBar = {
             MainBottomNavigation(
                 selected = destination,
-                onSelect = { destination = it },
+                onSelect = { selected ->
+                    if (selected != MainDestination.Explore && state.filter.search.isNotEmpty()) {
+                        onIntent(LibraryIntent.Search(""))
+                    }
+                    destination = selected
+                },
             )
         },
     ) { padding ->
@@ -224,6 +229,11 @@ internal fun LibraryScreen(
                                         onIntent = onIntent,
                                         onOpenCollection = onOpenCollection,
                                         onOpenTrack = onOpenTrack,
+                                        onBrowseLibrary = { tab ->
+                                            onIntent(LibraryIntent.Search(""))
+                                            onIntent(LibraryIntent.SelectTab(tab))
+                                            destination = MainDestination.Library
+                                        },
                                     )
                                 }
                             }
@@ -856,8 +866,12 @@ private fun HomeMusicFeed(
     onIntent: (LibraryIntent) -> Unit,
     onOpenCollection: (TrackCollection) -> Unit,
     onOpenTrack: (Track) -> Unit,
+    onBrowseLibrary: (LibraryTab) -> Unit,
 ) {
     val selecting = state.selecting
+    val recentlyAdded = remember(state.tracks) {
+        state.tracks.sortedByDescending { it.dateAddedEpochSeconds }.take(12)
+    }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding =
@@ -883,6 +897,35 @@ private fun HomeMusicFeed(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .horizontalScroll(rememberScrollState())
+                            .padding(top = Spacing.small),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    LibraryCategoryChip(
+                        label = stringResource(R.string.tab_songs),
+                        selected = false,
+                        onClick = { onBrowseLibrary(LibraryTab.Songs) },
+                    )
+                    LibraryCategoryChip(
+                        label = stringResource(R.string.tab_albums),
+                        selected = false,
+                        onClick = { onBrowseLibrary(LibraryTab.Albums) },
+                    )
+                    LibraryCategoryChip(
+                        label = stringResource(R.string.tab_artists),
+                        selected = false,
+                        onClick = { onBrowseLibrary(LibraryTab.Artists) },
+                    )
+                    LibraryCategoryChip(
+                        label = stringResource(R.string.tab_folders),
+                        selected = false,
+                        onClick = { onBrowseLibrary(LibraryTab.Folders) },
+                    )
+                }
                 Row(
                     modifier = Modifier.padding(top = Spacing.small),
                     horizontalArrangement = Arrangement.spacedBy(Spacing.small),
@@ -931,6 +974,112 @@ private fun HomeMusicFeed(
                             onClick = { onOpenCollection(album) },
                             modifier = Modifier.widthIn(min = 156.dp, max = 176.dp),
                         )
+                    }
+                }
+            }
+        }
+        if (state.artists.isNotEmpty()) {
+            item(key = "artists-heading", contentType = "section-heading") {
+                Text(
+                    "Artists",
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    modifier = Modifier.padding(top = Spacing.medium),
+                )
+            }
+            item(key = "artists-carousel", contentType = "artists-carousel") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    state.artists.take(12).forEach { artist ->
+                        Surface(
+                            onClick = { onOpenCollection(artist) },
+                            modifier = Modifier.widthIn(min = 116.dp, max = 132.dp),
+                            shape = MaterialTheme.shapes.medium,
+                            color = MaterialTheme.colorScheme.surface,
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(Spacing.small),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(Spacing.small),
+                            ) {
+                                ArtworkImage(
+                                    model = artist.artworkRef?.uri,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(108.dp),
+                                    shape = CircleShape,
+                                )
+                                Text(
+                                    artist.title,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    pluralStringResource(
+                                        R.plurals.song_count,
+                                        artist.tracks.size,
+                                        artist.tracks.size,
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (recentlyAdded.isNotEmpty()) {
+            item(key = "recently-added-heading", contentType = "section-heading") {
+                Text(
+                    "Recently added",
+                    style = MaterialTheme.typography.titleLargeEmphasized,
+                    modifier = Modifier.padding(top = Spacing.medium),
+                )
+            }
+            item(key = "recently-added-carousel", contentType = "recently-added-carousel") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    recentlyAdded.forEach { track ->
+                        Surface(
+                            onClick = {
+                                if (selecting) onIntent(LibraryIntent.ToggleSelection(track.id))
+                                else onIntent(LibraryIntent.Play(track))
+                            },
+                            modifier = Modifier.widthIn(min = 148.dp, max = 160.dp),
+                            shape = MaterialTheme.shapes.medium,
+                            color = MaterialTheme.colorScheme.surface,
+                        ) {
+                            Column {
+                                ArtworkImage(
+                                    model = track.artworkRef?.uri,
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxWidth().height(148.dp),
+                                )
+                                Column(
+                                    modifier = Modifier.padding(Spacing.medium),
+                                    verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall),
+                                ) {
+                                    Text(
+                                        track.title,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                    Text(
+                                        track.artist ?: stringResource(CoreUiR.string.unknown_artist),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
