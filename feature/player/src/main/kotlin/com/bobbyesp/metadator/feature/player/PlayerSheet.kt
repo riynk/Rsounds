@@ -584,7 +584,7 @@ private val BarMaxWidth = 560.dp
 /** The bar's shadow where no halo lifts it. */
 private val BarShadow = 6.dp
 private val BarArtworkCorner = 16.dp
-private val ScreenArtworkCorner = 28.dp
+private val ScreenArtworkCorner = 16.dp
 private val FlingThreshold = 125.dp
 
 private enum class SharedKey {

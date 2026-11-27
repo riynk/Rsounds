@@ -109,8 +109,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 private const val APP_NAME = "Rsounds"
-private const val SOURCE_URL = "https://github.com/BobbyESP/Metadator"
-private const val ISSUES_URL = "https://github.com/BobbyESP/Metadator/issues"
+private const val SOURCE_URL = "https://github.com/riynk/Rsounds"
+private const val ISSUES_URL = "https://github.com/riynk/Rsounds/issues"
 private const val PLAY_URL = "https://play.google.com/store/apps/details?id=com.bobbyesp.metadator"
 
 /** Seeds offered when wallpaper colors are off: the default first. */
