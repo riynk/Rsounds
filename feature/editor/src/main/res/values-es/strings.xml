@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Saving and undoing -->
+    <string name="save">Guardar</string>
+    <string name="saving">Guardando…</string>
+    <string name="saved">Guardado</string>
+    <string name="saved_some_unsupported">Guardado. Este formato no admite: %1$s</string>
+    <string name="save_failed">No se pudo guardar: %1$s</string>
+    <string name="save_failed_restored">No se pudo guardar; el archivo se dejó como estaba (%1$s)</string>
+    <string name="write_access_denied">Metadator no tiene permiso para cambiar este archivo</string>
+    <string name="format_unsupported">El formato de este archivo no se puede editar</string>
+    <string name="undo">Deshacer</string>
+    <string name="undone">Cambios deshechos</string>
+    <string name="undo_unavailable">Las etiquetas originales ya no están disponibles</string>
+    <string name="undo_failed">No se pudieron deshacer los cambios</string>
+    <string name="revert_all">Deshacer todos los cambios</string>
+    <string name="play_unavailable">Solo se pueden reproducir las canciones de tu biblioteca</string>
+
+    <!-- Sections -->
+    <string name="needs_attention_title">Necesita atención</string>
+    <string name="section_main">Canción</string>
+    <string name="section_track">Pista</string>
+    <string name="section_credits">Créditos</string>
+    <string name="section_more">Más</string>
+    <string name="section_lyrics">Letra</string>
+    <string name="section_all_tags">Todas las etiquetas</string>
+    <string name="section_file">Archivo</string>
+    <string name="all_tags_description">El resto de etiquetas del archivo. Se mantienen tal cual salvo que las cambies aquí.</string>
+
+    <!-- Cover -->
+    <string name="cover_change">Cambiar portada</string>
+    <string name="cover_remove">Quitar portada</string>
+    <string name="cover_revert">Mantener la portada original</string>
+    <string name="cover_find_online">Buscar portada en internet</string>
+    <string name="cover_small_warning">Portada pequeña: puede verse borrosa en pantallas grandes</string>
+    <string name="cover_none">Sin portada</string>
+
+    <!-- Lyrics -->
+    <string name="lyrics_find">Buscar letra</string>
+    <string name="lyrics_synced">Sincronizada</string>
+    <string name="lyrics_found_synced">Letra sincronizada añadida</string>
+    <string name="lyrics_found_plain">Letra añadida</string>
+    <string name="lyrics_not_found">No se encontró la letra de esta canción</string>
+    <string name="lyrics_instrumental">Esta canción es instrumental</string>
+    <string name="lyrics_failed">No se pudo buscar la letra</string>
+    <string name="lyrics_need_title_artist">Añade primero un título y un artista</string>
+    <string name="offline">No tienes conexión</string>
+
+    <!-- Adding a tag -->
+    <string name="add_field">Añadir una etiqueta</string>
+    <string name="add_field_name">Nombre</string>
+    <string name="add_field_name_hint">Por ejemplo MOOD</string>
+    <string name="add_field_value">Valor</string>
+    <string name="add">Añadir</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- File details -->
+    <string name="file_size">Tamaño</string>
+    <string name="file_duration">Duración</string>
+    <string name="file_bitrate">Tasa de bits</string>
+    <string name="file_bitrate_value">%1$d kbps</string>
+    <string name="file_sample_rate">Frecuencia de muestreo</string>
+    <string name="file_sample_rate_value">%1$s kHz</string>
+    <string name="file_channels">Canales</string>
+    <string name="file_channels_mono">Mono</string>
+    <string name="file_channels_stereo">Estéreo</string>
+    <string name="file_location">Ubicación</string>
+
+    <!-- Leaving with unsaved changes -->
+    <string name="unsaved_title">¿Descartar los cambios?</string>
+    <string name="unsaved_description">Los cambios en esta canción no se han guardado.</string>
+    <string name="unsaved_discard">Descartar</string>
+    <string name="unsaved_keep">Seguir editando</string>
+
+    <!-- Files that can't be opened -->
+    <string name="file_gone_title">Este archivo ya no está</string>
+    <string name="file_gone_description">Se movió o se borró después de que la biblioteca lo listara.</string>
+    <string name="access_denied_title">No se puede abrir este archivo</string>
+    <string name="access_denied_description">La app que lo compartió no permitió a Metadator leerlo. Prueba a abrirlo desde la biblioteca o desde un gestor de archivos.</string>
+    <string name="unsupported_title">Formato no compatible</string>
+    <string name="unsupported_description">Metadator no puede leer las etiquetas de este tipo de archivo.</string>
+    <string name="failed_title">No se pudo abrir este archivo</string>
+    <string name="retry">Reintentar</string>
+    <string name="go_back">Volver</string>
+
+    <!-- Finding metadata online: searching -->
+    <string name="lookup_title">Buscar metadatos</string>
+    <string name="lookup_find">Buscar metadatos</string>
+    <string name="lookup_search">Buscar</string>
+    <string name="lookup_searching">Buscando…</string>
+    <string name="lookup_results">Resultados</string>
+    <string name="lookup_no_results">Sin coincidencias. Prueba con menos palabras.</string>
+    <string name="lookup_no_providers">Todas las fuentes están desactivadas. Activa alguna en Ajustes.</string>
+    <string name="lookup_rate_limited">Las fuentes están ocupadas. Inténtalo de nuevo en un momento.</string>
+    <string name="lookup_failed">La búsqueda falló. Inténtalo de nuevo.</string>
+    <!-- %1$s is the name of a source, such as MusicBrainz -->
+    <string name="lookup_partial">%1$s no respondió</string>
+    <string name="lookup_confidence_high">Buena coincidencia</string>
+    <string name="lookup_confidence_medium">Posible coincidencia</string>
+    <string name="lookup_confidence_low">Coincidencia débil</string>
+
+    <!-- Finding metadata online: choosing what to use -->
+    <string name="lookup_compare_title">Elige qué usar</string>
+    <!-- %1$s is the field's current value -->
+    <string name="lookup_current">Ahora: %1$s</string>
+    <string name="lookup_empty_value">vacío</string>
+    <string name="lookup_show_unchanged">Campos que ya coinciden (%1$d)</string>
+    <string name="lookup_selected_count">%1$d de %2$d seleccionados</string>
+    <string name="lookup_select_none">Quitar todo</string>
+    <string name="lookup_use_cover">Usar esta portada</string>
+    <string name="lookup_apply">Usar lo seleccionado</string>
+    <string name="lookup_back">Volver a los resultados</string>
+    <string name="lookup_applied">Aplicado. Revisa y guarda cuando quieras</string>
+
+    <!-- Edit history -->
+    <string name="history_title">Historial de edición</string>
+    <string name="history_description">Antes de cada guardado, Metadator guarda una copia de la canción tal como estaba. Puedes volver a cualquiera de ellas.</string>
+    <string name="history_loading_failed">No se pudo cargar el historial</string>
+    <string name="history_empty">Aún no hay guardados. Cada vez que guardes esta canción, aquí aparecerá cómo estaba antes.</string>
+    <string name="history_today">Hoy</string>
+    <string name="history_yesterday">Ayer</string>
+    <string name="history_cover">Portada</string>
+    <string name="history_cover_added">Portada añadida</string>
+    <string name="history_cover_replaced">Portada cambiada</string>
+    <string name="history_cover_removed">Portada quitada</string>
+    <string name="history_no_changes">Sin cambios</string>
+    <string name="history_expanded">Desplegado</string>
+    <string name="history_collapsed">Plegado</string>
+    <string name="history_changed_to">cambió a</string>
+    <string name="history_restore">Volver a antes de este guardado</string>
+    <string name="history_restoring">Restaurando…</string>
+    <string name="history_restore_title">¿Volver a antes de este guardado?</string>
+    <!-- %1$s is the date and time of the save -->
+    <string name="history_restore_description">Las etiquetas y la portada vuelven a como estaban antes del guardado del %1$s. Los guardados posteriores también se deshacen, y esto también se puede deshacer desde el historial.</string>
+    <string name="history_restore_unsaved">Se perderán los cambios sin guardar.</string>
+    <string name="history_restore_confirm">Volver</string>
+    <string name="history_restored">Versión anterior restaurada</string>
+    <string name="history_restore_failed">No se pudo restaurar esa versión</string>
+</resources>

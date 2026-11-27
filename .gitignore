@@ -1,0 +1,41 @@
+# Gradle and Kotlin
+.gradle/
+.kotlin/
+build/
+
+# Native builds
+.cxx/
+.externalNativeBuild/
+
+# Machine-specific configuration
+local.properties
+
+# Secrets: the signing keystore and the Firebase configuration
+*.jks
+*.keystore
+google-services.json
+
+# Packaged apps
+*.apk
+*.aab
+
+# Android Studio
+*.iml
+/captures/
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/runConfigurations.xml
+/.idea/AndroidProjectSystem.xml
+/.idea/markdown.xml
+/.idea/other.xml
+
+# Operating system
+.DS_Store
+Thumbs.db
+mapping.txt

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Saving and undoing -->
+    <string name="save">Save</string>
+    <string name="saving">Saving…</string>
+    <string name="saved">Saved</string>
+    <string name="saved_some_unsupported">Saved. This format can\'t store: %1$s</string>
+    <string name="save_failed">Couldn\'t save: %1$s</string>
+    <string name="save_failed_restored">Couldn\'t save, the file was left as it was (%1$s)</string>
+    <string name="write_access_denied">Metadator wasn\'t allowed to change this file</string>
+    <string name="format_unsupported">This file\'s format can\'t be edited</string>
+    <string name="undo">Undo</string>
+    <string name="undone">Changes undone</string>
+    <string name="undo_unavailable">The original tags are no longer available</string>
+    <string name="undo_failed">Couldn\'t undo the changes</string>
+    <string name="revert_all">Undo all changes</string>
+    <string name="play_unavailable">Only songs in your library can be played</string>
+
+    <!-- Sections -->
+    <string name="needs_attention_title">Needs attention</string>
+    <string name="section_main">Song</string>
+    <string name="section_track">Track</string>
+    <string name="section_credits">Credits</string>
+    <string name="section_more">More</string>
+    <string name="section_lyrics">Lyrics</string>
+    <string name="section_all_tags">All tags</string>
+    <string name="section_file">File</string>
+    <string name="all_tags_description">Every other tag in the file. Kept as it is unless you change it here.</string>
+
+    <!-- Cover -->
+    <string name="cover_change">Change cover</string>
+    <string name="cover_remove">Remove cover</string>
+    <string name="cover_revert">Keep the original cover</string>
+    <string name="cover_find_online">Find a cover online</string>
+    <string name="cover_size" translatable="false">%1$d × %2$d px</string>
+    <string name="cover_small_warning">Small cover: it may look blurry on a large screen</string>
+    <string name="cover_none">No cover</string>
+
+    <!-- Lyrics -->
+    <string name="lyrics_find">Find lyrics</string>
+    <string name="lyrics_synced">Synced</string>
+    <string name="lyrics_found_synced">Synced lyrics added</string>
+    <string name="lyrics_found_plain">Lyrics added</string>
+    <string name="lyrics_not_found">No lyrics found for this song</string>
+    <string name="lyrics_instrumental">This song is instrumental</string>
+    <string name="lyrics_failed">Couldn\'t look for lyrics</string>
+    <string name="lyrics_need_title_artist">Add a title and an artist first</string>
+    <string name="offline">You\'re offline</string>
+
+    <!-- Adding a tag -->
+    <string name="add_field">Add a tag</string>
+    <string name="add_field_name">Name</string>
+    <string name="add_field_name_hint">For example MOOD</string>
+    <string name="add_field_value">Value</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- File details -->
+    <string name="file_size">Size</string>
+    <string name="file_duration">Duration</string>
+    <string name="file_bitrate">Bitrate</string>
+    <string name="file_bitrate_value">%1$d kbps</string>
+    <string name="file_sample_rate">Sample rate</string>
+    <string name="file_sample_rate_value">%1$s kHz</string>
+    <string name="file_channels">Channels</string>
+    <string name="file_channels_mono">Mono</string>
+    <string name="file_channels_stereo">Stereo</string>
+    <string name="file_location">Location</string>
+
+    <!-- Leaving with unsaved changes -->
+    <string name="unsaved_title">Discard changes?</string>
+    <string name="unsaved_description">The changes to this song haven\'t been saved.</string>
+    <string name="unsaved_discard">Discard</string>
+    <string name="unsaved_keep">Keep editing</string>
+
+    <!-- Files that can't be opened -->
+    <string name="file_gone_title">This file is gone</string>
+    <string name="file_gone_description">It was moved or deleted after the library listed it.</string>
+    <string name="access_denied_title">Can\'t open this file</string>
+    <string name="access_denied_description">The app that shared it didn\'t allow Metadator to read it. Try opening it from the library or from a file manager.</string>
+    <string name="unsupported_title">Format not supported</string>
+    <string name="unsupported_description">Metadator can\'t read tags from this kind of file.</string>
+    <string name="failed_title">Couldn\'t open this file</string>
+    <string name="retry">Try again</string>
+    <string name="go_back">Go back</string>
+
+    <!-- Finding metadata online: searching -->
+    <string name="lookup_title">Find metadata</string>
+    <string name="lookup_find">Find metadata</string>
+    <string name="lookup_search">Search</string>
+    <string name="lookup_searching">Searching…</string>
+    <string name="lookup_results">Results</string>
+    <string name="lookup_no_results">No matches. Try fewer words.</string>
+    <string name="lookup_no_providers">Every source is turned off. Turn one on in Settings.</string>
+    <string name="lookup_rate_limited">The sources are busy. Try again in a moment.</string>
+    <string name="lookup_failed">The search failed. Try again.</string>
+    <!-- %1$s is the name of a source, such as MusicBrainz -->
+    <string name="lookup_partial">%1$s didn\'t answer</string>
+    <string name="lookup_confidence_high">Good match</string>
+    <string name="lookup_confidence_medium">Possible match</string>
+    <string name="lookup_confidence_low">Weak match</string>
+
+    <!-- Finding metadata online: choosing what to use -->
+    <string name="lookup_compare_title">Choose what to use</string>
+    <!-- %1$s is the field's current value -->
+    <string name="lookup_current">Now: %1$s</string>
+    <string name="lookup_empty_value">empty</string>
+    <string name="lookup_show_unchanged">Fields that already match (%1$d)</string>
+    <string name="lookup_selected_count">%1$d of %2$d selected</string>
+    <string name="lookup_select_none">Clear</string>
+    <string name="lookup_use_cover">Use this cover</string>
+    <string name="lookup_apply">Use selected</string>
+    <string name="lookup_back">Back to results</string>
+    <string name="lookup_applied">Applied. Review and save when ready</string>
+
+    <!-- Edit history -->
+    <string name="history_title">Edit history</string>
+    <string name="history_description">Before every save, Metadator keeps a copy of the song as it was. You can go back to any of them.</string>
+    <string name="history_loading_failed">Couldn\'t load the history</string>
+    <string name="history_empty">No saves yet. Each time you save this song, how it was before shows up here.</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+    <string name="history_cover">Cover</string>
+    <string name="history_cover_added">Cover added</string>
+    <string name="history_cover_replaced">Cover replaced</string>
+    <string name="history_cover_removed">Cover removed</string>
+    <!-- The first fields a save changed, then how many more it changed -->
+    <string name="history_more" translatable="false">%1$s +%2$d</string>
+    <string name="history_no_changes">Nothing changed</string>
+    <string name="history_expanded">Expanded</string>
+    <string name="history_collapsed">Collapsed</string>
+    <string name="history_changed_to">changed to</string>
+    <string name="history_restore">Go back to before this save</string>
+    <string name="history_restoring">Restoring…</string>
+    <string name="history_restore_title">Go back to before this save?</string>
+    <!-- %1$s is the date and time of the save -->
+    <string name="history_restore_description">The tags and cover return to how they were before the save of %1$s. Later saves are undone too, and you can undo this from the history as well.</string>
+    <string name="history_restore_unsaved">Your unsaved changes will be lost.</string>
+    <string name="history_restore_confirm">Go back</string>
+    <string name="history_restored">Earlier version restored</string>
+    <string name="history_restore_failed">Couldn\'t restore that version</string>
+</resources>
