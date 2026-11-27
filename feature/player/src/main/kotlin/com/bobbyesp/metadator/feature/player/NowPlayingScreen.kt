@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
@@ -42,6 +43,8 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
@@ -630,12 +633,24 @@ internal fun SecondaryControls(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ShuffleButton(playback, player)
-        FilledTonalButton(onClick = onEdit, shapes = ButtonDefaults.shapes()) {
-            Icon(Icons.Rounded.Edit, null, Modifier.size(ButtonDefaults.IconSize))
-            Text(
-                stringResource(CoreUiR.string.edit_tags),
-                Modifier.padding(start = ButtonDefaults.IconSpacing),
-            )
+        var actionsExpanded by remember { mutableStateOf(false) }
+        Box {
+            IconButton(onClick = { actionsExpanded = true }, shapes = IconButtonDefaults.shapes()) {
+                Icon(Icons.Rounded.MoreVert, contentDescription = stringResource(CoreUiR.string.more_options))
+            }
+            DropdownMenu(
+                expanded = actionsExpanded,
+                onDismissRequest = { actionsExpanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(CoreUiR.string.edit_tags)) },
+                    leadingIcon = { Icon(Icons.Rounded.Edit, null) },
+                    onClick = {
+                        actionsExpanded = false
+                        onEdit()
+                    },
+                )
+            }
         }
         RepeatButton(playback, player)
     }
