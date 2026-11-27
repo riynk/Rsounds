@@ -75,6 +75,17 @@ fun MetadatorTheme(settings: UserSettings = UserSettings(), content: @Composable
 
     val motionScheme = remember { MotionScheme.expressive() }
 
+    val youtubeMusicScheme = remember(built.scheme) {
+        built.scheme.copy(
+            primary = BrandColors.YouTubeRed,
+            onPrimary = Color.White,
+            primaryContainer = Color(0xFF5C0018),
+            onPrimaryContainer = Color(0xFFFFD9E0),
+            secondary = Color(0xFFFFB1C0),
+            onSecondary = Color(0xFF3E0010),
+            tertiary = Color(0xFFFF8A9B),
+        )
+    }
     val themeColors = remember(built, cache) { ThemeColors(built, cache) }
 
     CompositionLocalProvider(
@@ -82,7 +93,7 @@ fun MetadatorTheme(settings: UserSettings = UserSettings(), content: @Composable
         LocalThemeColors provides themeColors,
     ) {
         MaterialExpressiveTheme(
-            colorScheme = built.scheme,
+            colorScheme = youtubeMusicScheme,
             motionScheme = motionScheme,
             typography = MetadatorTypography,
             content = content,
