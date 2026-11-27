@@ -137,7 +137,7 @@ private fun TrackArtwork(track: Track, selected: Boolean) {
     val motion = MaterialTheme.motionScheme
     val corner by
         animateDpAsState(
-            targetValue = if (selected) ArtworkSize / 2 else 12.dp,
+            targetValue = if (selected) ArtworkSize / 2 else 8.dp,
             animationSpec = motion.fastSpatialSpec(),
             label = "ArtworkCorner",
         )
@@ -170,7 +170,7 @@ private fun TrackArtwork(track: Track, selected: Boolean) {
     }
 }
 
-private val ArtworkSize = 52.dp
+private val ArtworkSize = 48.dp
 
 @Composable
 private fun TrackSubtitle(track: Track) {
@@ -220,7 +220,7 @@ fun CollectionCard(
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
         Column {
@@ -228,7 +228,7 @@ fun CollectionCard(
                 model = artwork,
                 contentDescription = null,
                 modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-                shape = MaterialTheme.shapes.large,
+                shape = MaterialTheme.shapes.medium,
             )
             Column(
                 modifier = Modifier.padding(12.dp),

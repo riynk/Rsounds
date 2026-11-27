@@ -75,28 +75,34 @@ fun MetadatorTheme(settings: UserSettings = UserSettings(), content: @Composable
 
     val motionScheme = remember { MotionScheme.expressive() }
 
-    val youtubeMusicScheme = remember(built.scheme) {
-        built.scheme.copy(
-            primary = BrandColors.YouTubeRed,
-            onPrimary = Color.White,
-            primaryContainer = Color(0xFF5C0018),
-            onPrimaryContainer = Color(0xFFFFD9E0),
-            secondary = Color(0xFFFFB1C0),
-            onSecondary = Color(0xFF3E0010),
-            tertiary = Color(0xFFFF8A9B),
-            background = if (isDark) Color(0xFF0F0F0F) else built.scheme.background,
-            onBackground = if (isDark) Color.White else built.scheme.onBackground,
-            surface = if (isDark) Color(0xFF0F0F0F) else built.scheme.surface,
-            onSurface = if (isDark) Color.White else built.scheme.onSurface,
-            onSurfaceVariant = if (isDark) Color(0xFFAAAAAA) else built.scheme.onSurfaceVariant,
-            surfaceVariant = if (isDark) Color(0xFF272727) else built.scheme.surfaceVariant,
-            surfaceContainerLowest = if (isDark) Color(0xFF0F0F0F) else built.scheme.surfaceContainerLowest,
-            surfaceContainerLow = if (isDark) Color(0xFF181818) else built.scheme.surfaceContainerLow,
-            surfaceContainer = if (isDark) Color(0xFF212121) else built.scheme.surfaceContainer,
-            surfaceContainerHigh = if (isDark) Color(0xFF272727) else built.scheme.surfaceContainerHigh,
-            surfaceContainerHighest = if (isDark) Color(0xFF303030) else built.scheme.surfaceContainerHighest,
-        )
-    }
+    val youtubeMusicScheme =
+        remember(built.scheme, isDark) {
+            built.scheme.copy(
+                primary = BrandColors.YouTubeRed,
+                onPrimary = Color.White,
+                primaryContainer = if (isDark) Color(0xFF5C0018) else Color(0xFFFFD9E0),
+                onPrimaryContainer = if (isDark) Color(0xFFFFD9E0) else Color(0xFF41000D),
+                secondary = if (isDark) Color(0xFFE5E5E5) else Color(0xFF4A4A4A),
+                onSecondary = if (isDark) Color(0xFF202020) else Color.White,
+                secondaryContainer = if (isDark) Color(0xFF292929) else Color(0xFFEDEDED),
+                onSecondaryContainer = if (isDark) Color(0xFFF2F2F2) else Color(0xFF202020),
+                tertiary = if (isDark) Color(0xFFFF8298) else Color(0xFFB32645),
+                background = if (isDark) Color(0xFF0F0F0F) else Color(0xFFFAFAFA),
+                onBackground = if (isDark) Color.White else Color(0xFF171717),
+                surface = if (isDark) Color(0xFF0F0F0F) else Color.White,
+                onSurface = if (isDark) Color.White else Color(0xFF171717),
+                onSurfaceVariant = if (isDark) Color(0xFFAAAAAA) else Color(0xFF666666),
+                surfaceVariant = if (isDark) Color(0xFF272727) else Color(0xFFEEEEEE),
+                surfaceTint = BrandColors.YouTubeRed,
+                surfaceContainerLowest = if (isDark) Color(0xFF0F0F0F) else Color.White,
+                surfaceContainerLow = if (isDark) Color(0xFF181818) else Color(0xFFF7F7F7),
+                surfaceContainer = if (isDark) Color(0xFF212121) else Color(0xFFF2F2F2),
+                surfaceContainerHigh = if (isDark) Color(0xFF272727) else Color(0xFFEDEDED),
+                surfaceContainerHighest = if (isDark) Color(0xFF303030) else Color(0xFFE7E7E7),
+                outline = if (isDark) Color(0xFF424242) else Color(0xFFD4D4D4),
+                outlineVariant = if (isDark) Color(0xFF333333) else Color(0xFFE0E0E0),
+            )
+        }
     val themeColors = remember(built, cache) { ThemeColors(built, cache) }
 
     CompositionLocalProvider(

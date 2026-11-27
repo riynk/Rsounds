@@ -118,6 +118,7 @@ import com.bobbyesp.metadator.core.designsystem.component.PopupMenu
 import com.bobbyesp.metadator.core.designsystem.component.PopupMenuGroup
 import com.bobbyesp.metadator.core.designsystem.component.ToggleChip
 import com.bobbyesp.metadator.core.designsystem.theme.GroupShapes
+import com.bobbyesp.metadator.core.designsystem.theme.MetadatorGlyph
 import com.bobbyesp.metadator.core.designsystem.theme.Spacing
 import com.bobbyesp.metadator.core.designsystem.theme.blurHalo
 import com.bobbyesp.metadator.core.model.SortOrder
@@ -228,12 +229,65 @@ private fun SearchTopBar(
 ) {
     val focusManager = LocalFocusManager.current
     var menuOpen by remember { mutableStateOf(false) }
-    Box(
+    Column(
         modifier =
             Modifier.fillMaxWidth()
                 .windowInsetsPadding(TopAppBarDefaults.windowInsets)
                 .padding(horizontal = Spacing.screen, vertical = Spacing.small)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().height(40.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    MetadatorGlyph,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(28.dp),
+                )
+                Text("Rsounds", style = MaterialTheme.typography.titleLargeEmphasized)
+            }
+            Spacer(Modifier.weight(1f))
+            Box {
+                IconButton(
+                    onClick = { menuOpen = true },
+                    shapes = IconButtonDefaults.shapes(),
+                ) {
+                    Icon(
+                        Icons.Rounded.MoreVert,
+                        contentDescription = stringResource(CoreUiR.string.more_options),
+                    )
+                }
+                ActionMenu(
+                    expanded = menuOpen,
+                    onDismissRequest = { menuOpen = false },
+                    actions =
+                        listOfNotNull(
+                            MenuAction(
+                                stringResource(R.string.open_file),
+                                Icons.Rounded.AudioFile,
+                                onClick = onOpenFile,
+                            ),
+                            MenuAction(
+                                    stringResource(R.string.rescan_library),
+                                    Icons.Rounded.Refresh,
+                                    onClick = onRescan,
+                                )
+                                .takeIf { enabled },
+                            MenuAction(
+                                stringResource(CoreUiR.string.settings),
+                                Icons.Rounded.Settings,
+                                onClick = onOpenSettings,
+                            ),
+                        ),
+                )
+            }
+        }
+        Spacer(Modifier.height(Spacing.small))
         TextField(
             value = query,
             onValueChange = onQueryChange,
@@ -248,57 +302,21 @@ private fun SearchTopBar(
             },
             leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
             trailingIcon = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AnimatedVisibility(
-                        visible = query.isNotEmpty(),
-                        enter = fadeIn() + scaleIn(),
-                        exit = fadeOut() + scaleOut(),
+                AnimatedVisibility(
+                    visible = query.isNotEmpty(),
+                    enter = fadeIn() + scaleIn(),
+                    exit = fadeOut() + scaleOut(),
+                ) {
+                    IconButton(
+                        onClick = {
+                            onQueryChange("")
+                            focusManager.clearFocus()
+                        },
+                        shapes = IconButtonDefaults.shapes(),
                     ) {
-                        IconButton(
-                            onClick = {
-                                onQueryChange("")
-                                focusManager.clearFocus()
-                            },
-                            shapes = IconButtonDefaults.shapes(),
-                        ) {
-                            Icon(
-                                Icons.Rounded.Clear,
-                                contentDescription = stringResource(R.string.clear_search),
-                            )
-                        }
-                    }
-                    Box {
-                        IconButton(
-                            onClick = { menuOpen = true },
-                            shapes = IconButtonDefaults.shapes(),
-                        ) {
-                            Icon(
-                                Icons.Rounded.MoreVert,
-                                contentDescription = stringResource(CoreUiR.string.more_options),
-                            )
-                        }
-                        ActionMenu(
-                            expanded = menuOpen,
-                            onDismissRequest = { menuOpen = false },
-                            actions =
-                                listOfNotNull(
-                                    MenuAction(
-                                        stringResource(R.string.open_file),
-                                        Icons.Rounded.AudioFile,
-                                        onClick = onOpenFile,
-                                    ),
-                                    MenuAction(
-                                            stringResource(R.string.rescan_library),
-                                            Icons.Rounded.Refresh,
-                                            onClick = onRescan,
-                                        )
-                                        .takeIf { enabled },
-                                    MenuAction(
-                                        stringResource(CoreUiR.string.settings),
-                                        Icons.Rounded.Settings,
-                                        onClick = onOpenSettings,
-                                    ),
-                                ),
+                        Icon(
+                            Icons.Rounded.Clear,
+                            contentDescription = stringResource(R.string.clear_search),
                         )
                     }
                 }
@@ -315,7 +333,6 @@ private fun SearchTopBar(
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    // The menu works without the library: a file can still be opened.
                     disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
         )

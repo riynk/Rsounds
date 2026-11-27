@@ -81,7 +81,7 @@ internal fun MiniPlayerBar(
     Surface(
         onClick = onOpen,
         shape = shape,
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shadowElevation = shadowElevation,
         modifier =
             Modifier.fillMaxWidth().then(modifier).semantics {

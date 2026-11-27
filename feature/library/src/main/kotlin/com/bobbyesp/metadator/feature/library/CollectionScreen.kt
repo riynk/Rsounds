@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -153,8 +154,10 @@ private fun CollectionHeader(
             ArtworkImage(
                 model = collection.artworkRef?.uri,
                 contentDescription = null,
-                modifier = Modifier.size(220.dp),
-                shape = MaterialTheme.shapes.extraLarge,
+                modifier = Modifier.size(240.dp),
+                shape =
+                    if (collection is TrackCollection.Artist) CircleShape
+                    else MaterialTheme.shapes.medium,
             )
         }
         ActionButtonGroup(
