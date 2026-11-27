@@ -41,11 +41,9 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.Icon
@@ -636,7 +634,10 @@ internal fun SecondaryControls(
         var actionsExpanded by remember { mutableStateOf(false) }
         Box {
             IconButton(onClick = { actionsExpanded = true }, shapes = IconButtonDefaults.shapes()) {
-                Icon(Icons.Rounded.MoreVert, contentDescription = stringResource(CoreUiR.string.more_options))
+                Icon(
+                    Icons.Rounded.MoreVert,
+                    contentDescription = stringResource(CoreUiR.string.more_options),
+                )
             }
             DropdownMenu(
                 expanded = actionsExpanded,

@@ -53,6 +53,8 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.FolderOpen
+import androidx.compose.material.icons.rounded.Explore
+import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
@@ -77,6 +79,8 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SelectableDropdownMenuItem
@@ -93,6 +97,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -133,6 +138,8 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 
+private enum class MainDestination { Home, Explore, Library }
+
 @Composable
 internal fun LibraryScreen(
     state: LibraryState,
@@ -152,6 +159,7 @@ internal fun LibraryScreen(
 
     val haze = rememberHazeState()
     val latestState by rememberUpdatedState(state)
+    var destination by rememberSaveable { mutableStateOf(MainDestination.Home) }
 
     Scaffold(
         modifier = modifier,
@@ -164,16 +172,21 @@ internal fun LibraryScreen(
                         onSelectAll = { onIntent(LibraryIntent.SelectAll) },
                     )
                 } else {
-                    SearchTopBar(
-                        query = state.filter.search,
-                        onQueryChange = { onIntent(LibraryIntent.Search(it)) },
+                    MainTopBar(
                         enabled = permission.status == PermissionStatus.Granted,
+                        onSearch = { destination = MainDestination.Explore },
                         onOpenSettings = onOpenSettings,
                         onOpenFile = onOpenFile,
                         onRescan = { onIntent(LibraryIntent.Refresh) },
                     )
                 }
             }
+        },
+        bottomBar = {
+            MainBottomNavigation(
+                selected = destination,
+                onSelect = { destination = it },
+            )
         },
     ) { padding ->
         Box(Modifier.fillMaxSize().padding(padding)) {
@@ -188,13 +201,51 @@ internal fun LibraryScreen(
                         )
 
                     state.loading -> LoadingScreen()
-                    else ->
-                        LibraryContent(
-                            state = state,
-                            onIntent = onIntent,
-                            onOpenTrack = onOpenTrack,
-                            onOpenCollection = onOpenCollection,
-                        )
+                    else -> {
+                        when (destination) {
+                            MainDestination.Home -> {
+                                if (state.totalTracks == 0) {
+                                    CenteredPlaceholder {
+                                        PlaceholderCard(
+                                            title = stringResource(R.string.empty_library_title),
+                                            description = stringResource(R.string.empty_library_description),
+                                            icon = Icons.Rounded.LibraryMusic,
+                                            actionText = stringResource(R.string.rescan_library),
+                                            actionIcon = Icons.Rounded.Refresh,
+                                            onAction = { onIntent(LibraryIntent.Refresh) },
+                                        )
+                                    }
+                                } else {
+                                    HomeMusicFeed(
+                                        state = state,
+                                        onIntent = onIntent,
+                                        onOpenCollection = onOpenCollection,
+                                        onOpenTrack = onOpenTrack,
+                                    )
+                                }
+                            }
+
+                            MainDestination.Explore ->
+                                ExploreMusicFeed(
+                                    state = state,
+                                    onIntent = onIntent,
+                                    onOpenCollection = onOpenCollection,
+                                    onOpenTrack = onOpenTrack,
+                                    onBrowseLibrary = { tab ->
+                                        onIntent(LibraryIntent.SelectTab(tab))
+                                        destination = MainDestination.Library
+                                    },
+                                )
+
+                            MainDestination.Library ->
+                                LibraryContent(
+                                    state = state,
+                                    onIntent = onIntent,
+                                    onOpenTrack = onOpenTrack,
+                                    onOpenCollection = onOpenCollection,
+                                )
+                        }
+                    }
                 }
             }
 
@@ -218,128 +269,108 @@ internal fun LibraryScreen(
  * a field. It starts where the tabs and the filters under it do.
  */
 @Composable
-private fun SearchTopBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
+private fun MainTopBar(
     enabled: Boolean,
+    onSearch: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenFile: () -> Unit,
     onRescan: () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
     var menuOpen by remember { mutableStateOf(false) }
-    Column(
+    Row(
         modifier =
             Modifier.fillMaxWidth()
                 .windowInsetsPadding(TopAppBarDefaults.windowInsets)
                 .padding(horizontal = Spacing.screen, vertical = Spacing.small)
+                .height(48.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(40.dp),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
-                verticalAlignment = Alignment.CenterVertically,
+            Icon(
+                MetadatorGlyph,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(28.dp),
+            )
+            Text("Rsounds", style = MaterialTheme.typography.titleLargeEmphasized)
+        }
+        Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = onSearch,
+            enabled = enabled,
+            shapes = IconButtonDefaults.shapes(),
+        ) {
+            Icon(
+                Icons.Rounded.Search,
+                contentDescription = stringResource(R.string.search_library),
+            )
+        }
+        Box {
+            IconButton(
+                onClick = { menuOpen = true },
+                shapes = IconButtonDefaults.shapes(),
             ) {
                 Icon(
-                    MetadatorGlyph,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(28.dp),
+                    Icons.Rounded.MoreVert,
+                    contentDescription = stringResource(CoreUiR.string.more_options),
                 )
-                Text("Rsounds", style = MaterialTheme.typography.titleLargeEmphasized)
             }
-            Spacer(Modifier.weight(1f))
-            Box {
-                IconButton(
-                    onClick = { menuOpen = true },
-                    shapes = IconButtonDefaults.shapes(),
-                ) {
-                    Icon(
-                        Icons.Rounded.MoreVert,
-                        contentDescription = stringResource(CoreUiR.string.more_options),
-                    )
-                }
-                ActionMenu(
-                    expanded = menuOpen,
-                    onDismissRequest = { menuOpen = false },
-                    actions =
-                        listOfNotNull(
-                            MenuAction(
-                                stringResource(R.string.open_file),
-                                Icons.Rounded.AudioFile,
-                                onClick = onOpenFile,
-                            ),
-                            MenuAction(
-                                    stringResource(R.string.rescan_library),
-                                    Icons.Rounded.Refresh,
-                                    onClick = onRescan,
-                                )
-                                .takeIf { enabled },
-                            MenuAction(
-                                stringResource(CoreUiR.string.settings),
-                                Icons.Rounded.Settings,
-                                onClick = onOpenSettings,
-                            ),
+            ActionMenu(
+                expanded = menuOpen,
+                onDismissRequest = { menuOpen = false },
+                actions =
+                    listOfNotNull(
+                        MenuAction(
+                            stringResource(R.string.open_file),
+                            Icons.Rounded.AudioFile,
+                            onClick = onOpenFile,
                         ),
-                )
-            }
+                        MenuAction(
+                                stringResource(R.string.rescan_library),
+                                Icons.Rounded.Refresh,
+                                onClick = onRescan,
+                            )
+                            .takeIf { enabled },
+                        MenuAction(
+                            stringResource(CoreUiR.string.settings),
+                            Icons.Rounded.Settings,
+                            onClick = onOpenSettings,
+                        ),
+                    ),
+            )
         }
-        Spacer(Modifier.height(Spacing.small))
-        TextField(
-            value = query,
-            onValueChange = onQueryChange,
-            enabled = enabled,
-            modifier = Modifier.widthIn(max = SearchBarMaxWidth).fillMaxWidth(),
-            placeholder = {
-                Text(
-                    stringResource(R.string.search_library),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            },
-            leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = query.isNotEmpty(),
-                    enter = fadeIn() + scaleIn(),
-                    exit = fadeOut() + scaleOut(),
-                ) {
-                    IconButton(
-                        onClick = {
-                            onQueryChange("")
-                            focusManager.clearFocus()
-                        },
-                        shapes = IconButtonDefaults.shapes(),
-                    ) {
-                        Icon(
-                            Icons.Rounded.Clear,
-                            contentDescription = stringResource(R.string.clear_search),
-                        )
-                    }
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-            shape = CircleShape,
-            colors =
-                TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
-        )
     }
 }
 
-/** Material's widest search bar. */
-private val SearchBarMaxWidth = 720.dp
+@Composable
+private fun MainBottomNavigation(
+    selected: MainDestination,
+    onSelect: (MainDestination) -> Unit,
+) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+        NavigationBarItem(
+            selected = selected == MainDestination.Home,
+            onClick = { onSelect(MainDestination.Home) },
+            icon = { Icon(Icons.Rounded.Home, contentDescription = null) },
+            label = { Text("Home") },
+        )
+        NavigationBarItem(
+            selected = selected == MainDestination.Explore,
+            onClick = { onSelect(MainDestination.Explore) },
+            icon = { Icon(Icons.Rounded.Explore, contentDescription = null) },
+            label = { Text("Explore") },
+        )
+        NavigationBarItem(
+            selected = selected == MainDestination.Library,
+            onClick = { onSelect(MainDestination.Library) },
+            icon = { Icon(Icons.Rounded.LibraryMusic, contentDescription = null) },
+            label = { Text("Library") },
+        )
+    }
+}
 
 @Composable
 private fun SelectionTopBar(count: Int, onClose: () -> Unit, onSelectAll: () -> Unit) {
@@ -531,10 +562,12 @@ private fun LibraryContent(
                     ) { tab ->
                         when (tab) {
                             LibraryTab.Songs ->
-                                HomeMusicFeed(
-                                    state = state,
+                                SongList(
+                                    tracks = state.tracks,
+                                    selection = state.selection,
+                                    playingId = state.playingId,
+                                    playbackRunning = state.playbackRunning,
                                     onIntent = onIntent,
-                                    onOpenCollection = onOpenCollection,
                                     onOpenTrack = onOpenTrack,
                                 )
 
@@ -553,6 +586,133 @@ private fun LibraryContent(
                                     onOpenCollection,
                                 )
                         }
+                    }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExploreMusicFeed(
+    state: LibraryState,
+    onIntent: (LibraryIntent) -> Unit,
+    onOpenCollection: (TrackCollection) -> Unit,
+    onOpenTrack: (Track) -> Unit,
+    onBrowseLibrary: (LibraryTab) -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+    Column(Modifier.fillMaxSize()) {
+        Column(
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(horizontal = Spacing.screen, vertical = Spacing.large),
+            verticalArrangement = Arrangement.spacedBy(Spacing.small),
+        ) {
+            Text(
+                "Explore",
+                style = MaterialTheme.typography.displaySmallEmphasized,
+            )
+            Text(
+                "Find songs, albums and artists in your collection",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            TextField(
+                value = state.filter.search,
+                onValueChange = { onIntent(LibraryIntent.Search(it)) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text(stringResource(R.string.search_library)) },
+                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (state.filter.search.isNotEmpty()) {
+                        IconButton(
+                            onClick = {
+                                onIntent(LibraryIntent.Search(""))
+                                focusManager.clearFocus()
+                            },
+                            shapes = IconButtonDefaults.shapes(),
+                        ) {
+                            Icon(
+                                Icons.Rounded.Clear,
+                                contentDescription = stringResource(R.string.clear_search),
+                            )
+                        }
+                    }
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+                shape = CircleShape,
+                colors =
+                    TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    ),
+            )
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                LibraryCategoryChip(
+                    label = stringResource(R.string.tab_albums),
+                    selected = false,
+                    onClick = { onBrowseLibrary(LibraryTab.Albums) },
+                )
+                LibraryCategoryChip(
+                    label = stringResource(R.string.tab_artists),
+                    selected = false,
+                    onClick = { onBrowseLibrary(LibraryTab.Artists) },
+                )
+                LibraryCategoryChip(
+                    label = stringResource(R.string.tab_folders),
+                    selected = false,
+                    onClick = { onBrowseLibrary(LibraryTab.Folders) },
+                )
+            }
+        }
+        Box(Modifier.fillMaxWidth().weight(1f)) {
+            when {
+                state.filter.search.isNotBlank() && state.tracks.isNotEmpty() ->
+                    SongList(
+                        tracks = state.tracks,
+                        selection = state.selection,
+                        playingId = state.playingId,
+                        playbackRunning = state.playbackRunning,
+                        onIntent = onIntent,
+                        onOpenTrack = onOpenTrack,
+                    )
+
+                state.filter.search.isNotBlank() ->
+                    CenteredPlaceholder {
+                        PlaceholderCard(
+                            title = stringResource(R.string.no_results_title),
+                            description = stringResource(R.string.no_results_description),
+                            icon = Icons.Rounded.SearchOff,
+                            actionText = stringResource(R.string.clear_filters),
+                            onAction = { onIntent(LibraryIntent.Search("")) },
+                        )
+                    }
+
+                state.albums.isNotEmpty() -> AlbumGrid(state.albums, onOpenCollection)
+                state.artists.isNotEmpty() ->
+                    CollectionList(state.artists, Icons.Rounded.Person, onOpenCollection)
+                state.folders.isNotEmpty() ->
+                    CollectionList(state.folders, Icons.Rounded.FolderOpen, onOpenCollection)
+
+                else ->
+                    CenteredPlaceholder {
+                        PlaceholderCard(
+                            title = stringResource(R.string.empty_library_title),
+                            description = stringResource(R.string.empty_library_description),
+                            icon = Icons.Rounded.LibraryMusic,
+                            actionText = stringResource(R.string.rescan_library),
+                            actionIcon = Icons.Rounded.Refresh,
+                            onAction = { onIntent(LibraryIntent.Refresh) },
+                        )
                     }
             }
         }
@@ -885,10 +1045,11 @@ private fun SongList(
                 shapes = GroupShapes.listItemShapes(index, tracks.size),
                 onClick = {
                     if (selecting) onIntent(LibraryIntent.ToggleSelection(track.id))
-                    else onOpenTrack(track)
+                    else onIntent(LibraryIntent.Play(track))
                 },
                 onLongClick = { onIntent(LibraryIntent.ToggleSelection(track.id)) },
                 onPlay = { onIntent(LibraryIntent.Play(track)) },
+                onEdit = { onOpenTrack(track) },
                 modifier = Modifier.animateItem(),
             )
         }

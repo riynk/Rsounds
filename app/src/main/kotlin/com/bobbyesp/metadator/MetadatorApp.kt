@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -87,8 +88,8 @@ fun MetadatorApp(onExit: () -> Unit) {
     val snackbarClearance by
         animateDpAsState(
             targetValue =
-                if (showPlayer && playerActive) PlayerSheetDefaults.CollapsedClearance
-                else Spacing.medium,
+                (if (showPlayer && playerActive) PlayerSheetDefaults.CollapsedClearance else Spacing.medium) +
+                    (if (top == Library) 80.dp else 0.dp),
             label = "SnackbarClearance",
         )
 
@@ -127,6 +128,7 @@ fun MetadatorApp(onExit: () -> Unit) {
 
             PlayerSheet(
                 visible = showPlayer,
+                bottomNavigationVisible = top == Library,
                 onEdit = { uri -> navigator.goTo(Editor(uri)) },
                 layout = playerLayout,
                 expansion = playerExpansion,

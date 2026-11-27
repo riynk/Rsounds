@@ -17,17 +17,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -145,6 +152,7 @@ private fun CollectionHeader(
     onShuffle: () -> Unit,
     onEditAll: () -> Unit,
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth().padding(bottom = Spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -160,31 +168,54 @@ private fun CollectionHeader(
                     else MaterialTheme.shapes.medium,
             )
         }
-        ActionButtonGroup(
-            primary =
-                GroupAction(
-                    label = stringResource(CoreUiR.string.play),
-                    icon = Icons.Rounded.PlayArrow,
-                    onClick = onPlay,
-                ),
-            secondary =
-                listOf(
+        Row(
+            modifier = Modifier.widthIn(max = ActionsMaxWidth).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.small),
+        ) {
+            ActionButtonGroup(
+                primary =
                     GroupAction(
-                        label = stringResource(R.string.collection_edit_all),
-                        icon = Icons.Rounded.Edit,
-                        onClick = onEditAll,
+                        label = stringResource(CoreUiR.string.play),
+                        icon = Icons.Rounded.PlayArrow,
+                        onClick = onPlay,
                     ),
-                    GroupAction(
-                        label = stringResource(CoreUiR.string.shuffle),
-                        icon = Icons.Rounded.Shuffle,
-                        labeled = false,
-                        onClick = onShuffle,
+                secondary =
+                    listOf(
+                        GroupAction(
+                            label = stringResource(CoreUiR.string.shuffle),
+                            icon = Icons.Rounded.Shuffle,
+                            labeled = false,
+                            onClick = onShuffle,
+                        )
                     ),
-                ),
-            // As wide as the songs under it on a phone; on a wide window, no wider than reads as
-            // one group.
-            modifier = Modifier.widthIn(max = ActionsMaxWidth),
-        )
+                modifier = Modifier.weight(1f),
+            )
+            Box {
+                IconButton(
+                    onClick = { menuExpanded = true },
+                    shapes = IconButtonDefaults.shapes(),
+                ) {
+                    Icon(
+                        Icons.Rounded.MoreVert,
+                        contentDescription = stringResource(CoreUiR.string.more_options),
+                    )
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.collection_edit_all)) },
+                        leadingIcon = { Icon(Icons.Rounded.Edit, contentDescription = null) },
+                        onClick = {
+                            menuExpanded = false
+                            onEditAll()
+                        },
+                    )
+                }
+            }
+        }
     }
 }
 

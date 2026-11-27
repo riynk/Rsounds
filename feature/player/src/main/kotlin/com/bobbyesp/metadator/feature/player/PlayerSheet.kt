@@ -131,6 +131,7 @@ object PlayerSheetDefaults {
 @Composable
 fun PlayerSheet(
     visible: Boolean,
+    bottomNavigationVisible: Boolean = false,
     onEdit: (String) -> Unit,
     modifier: Modifier = Modifier,
     layout: PlayerLayout = PlayerLayout.Stacked,
@@ -304,7 +305,11 @@ fun PlayerSheet(
                                 backdrop = backdrop,
                                 modifier =
                                     Modifier.navigationBarsPadding()
-                                        .padding(bottom = Spacing.medium)
+                                        .padding(
+                                            bottom =
+                                                Spacing.medium +
+                                                    (if (bottomNavigationVisible) BottomNavigationClearance else 0.dp)
+                                        )
                                         .widthIn(max = BarMaxWidth)
                                         .fillMaxWidth()
                                         .padding(horizontal = Spacing.medium),
@@ -583,6 +588,7 @@ private val BarMaxWidth = 560.dp
 
 /** The bar's shadow where no halo lifts it. */
 private val BarShadow = 6.dp
+private val BottomNavigationClearance = 80.dp
 private val BarArtworkCorner = 16.dp
 private val ScreenArtworkCorner = 16.dp
 private val FlingThreshold = 125.dp
