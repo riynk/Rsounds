@@ -534,7 +534,6 @@ private fun LibraryContent(
                                 HomeMusicFeed(
                                     state = state,
                                     onIntent = onIntent,
-                                    onOpenTrack = onOpenTrack,
                                     onOpenCollection = onOpenCollection,
                                 )
 
@@ -691,7 +690,6 @@ private fun FilterRow(
 private fun HomeMusicFeed(
     state: LibraryState,
     onIntent: (LibraryIntent) -> Unit,
-    onOpenTrack: (Track) -> Unit,
     onOpenCollection: (TrackCollection) -> Unit,
 ) {
     val selecting = state.selecting
@@ -803,7 +801,7 @@ private fun HomeMusicFeed(
                 shapes = GroupShapes.listItemShapes(index, state.tracks.size),
                 onClick = {
                     if (selecting) onIntent(LibraryIntent.ToggleSelection(track.id))
-                    else onOpenTrack(track)
+                    else onIntent(LibraryIntent.Play(track))
                 },
                 onLongClick = { onIntent(LibraryIntent.ToggleSelection(track.id)) },
                 onPlay = { onIntent(LibraryIntent.Play(track)) },
