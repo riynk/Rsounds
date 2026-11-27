@@ -194,6 +194,7 @@ internal fun LibraryScreen(
                             onIntent = onIntent,
                             onOpenTrack = onOpenTrack,
                             onOpenCollection = onOpenCollection,
+                            onOpenTrack = onOpenTrack,
                         )
                 }
             }
@@ -454,6 +455,7 @@ private fun LibraryContent(
     onIntent: (LibraryIntent) -> Unit,
     onOpenTrack: (Track) -> Unit,
     onOpenCollection: (TrackCollection) -> Unit,
+    onOpenTrack: (Track) -> Unit,
 ) {
     val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<IntOffset>()
     val effects = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
@@ -535,6 +537,7 @@ private fun LibraryContent(
                                     state = state,
                                     onIntent = onIntent,
                                     onOpenCollection = onOpenCollection,
+                                    onOpenTrack = onOpenTrack,
                                 )
 
                             LibraryTab.Albums -> AlbumGrid(state.albums, onOpenCollection)
@@ -691,6 +694,7 @@ private fun HomeMusicFeed(
     state: LibraryState,
     onIntent: (LibraryIntent) -> Unit,
     onOpenCollection: (TrackCollection) -> Unit,
+    onOpenTrack: (Track) -> Unit,
 ) {
     val selecting = state.selecting
     LazyColumn(
@@ -807,6 +811,7 @@ private fun HomeMusicFeed(
                 },
                 onLongClick = { onIntent(LibraryIntent.ToggleSelection(track.id)) },
                 onPlay = { onIntent(LibraryIntent.Play(track)) },
+                onEdit = { onOpenTrack(track) },
                 modifier = Modifier.animateItem(),
             )
         }
