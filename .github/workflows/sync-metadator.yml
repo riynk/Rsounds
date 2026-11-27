@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  workflows: write
 
 concurrency:
   group: metadator-sync-main
@@ -16,6 +17,7 @@ jobs:
   sync:
     name: Replace Rsounds with upstream Metadator
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout Rsounds
         uses: actions/checkout@v4
@@ -26,6 +28,12 @@ jobs:
       - name: Clone upstream Metadator
         run: |
           git clone --depth 1 https://github.com/BobbyESP/Metadator.git "$RUNNER_TEMP/Metadator"
+
+      - name: Validate upstream source
+        run: |
+          test -f "$RUNNER_TEMP/Metadator/settings.gradle.kts"
+          test -f "$RUNNER_TEMP/Metadator/app/build.gradle.kts"
+          test -f "$RUNNER_TEMP/Metadator/gradlew"
 
       - name: Replace repository files
         run: |
