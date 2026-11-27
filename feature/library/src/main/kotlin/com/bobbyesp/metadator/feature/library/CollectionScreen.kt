@@ -135,7 +135,7 @@ internal fun CollectionScreen(
                 TrackListItem(
                     track = track,
                     onClick = { onPlay(tracks, index, false) },
-                    onLongClick = { onOpenTrack(track) },
+                    onLongClick = {},
                     onPlay = { onPlay(tracks, index, false) },
                     onEdit = { onOpenTrack(track) },
                     isPlaying = isPlaying,

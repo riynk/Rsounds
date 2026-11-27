@@ -29,9 +29,11 @@ import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Lyrics
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -252,8 +254,30 @@ private fun SidePanel(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (compact) {
-                    FilledTonalIconButton(onClick = onEdit, shapes = IconButtonDefaults.shapes()) {
-                        Icon(Icons.Rounded.Edit, stringResource(CoreUiR.string.edit_tags))
+                    var actionsExpanded by remember { mutableStateOf(false) }
+                    Box {
+                        IconButton(
+                            onClick = { actionsExpanded = true },
+                            shapes = IconButtonDefaults.shapes(),
+                        ) {
+                            Icon(
+                                Icons.Rounded.MoreVert,
+                                contentDescription = stringResource(CoreUiR.string.more_options),
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = actionsExpanded,
+                            onDismissRequest = { actionsExpanded = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(CoreUiR.string.edit_tags)) },
+                                leadingIcon = { Icon(Icons.Rounded.Edit, null) },
+                                onClick = {
+                                    actionsExpanded = false
+                                    onEdit()
+                                },
+                            )
+                        }
                     }
                 }
                 ConnectedChoices(

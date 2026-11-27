@@ -493,6 +493,113 @@ private fun PermissionNeeded(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Composable
+private fun ExploreCollectionsFeed(
+    state: LibraryState,
+    onOpenCollection: (TrackCollection) -> Unit,
+) {
+    val hasCollections =
+        state.albums.isNotEmpty() || state.artists.isNotEmpty() || state.folders.isNotEmpty()
+    if (!hasCollections) {
+        CenteredPlaceholder {
+            PlaceholderCard(
+                title = stringResource(R.string.empty_library_title),
+                description = stringResource(R.string.empty_library_description),
+                icon = Icons.Rounded.LibraryMusic,
+                actionText = stringResource(R.string.rescan_library),
+                actionIcon = Icons.Rounded.Refresh,
+                onAction = {},
+            )
+        }
+        return
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding =
+            PaddingValues(
+                start = Spacing.screen,
+                end = Spacing.screen,
+                bottom = Spacing.floatingClearance,
+            ),
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
+    ) {
+        if (state.albums.isNotEmpty()) {
+            item(key = "explore-albums-heading") {
+                Text("Albums", style = MaterialTheme.typography.titleLargeEmphasized)
+            }
+            item(key = "explore-albums") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    state.albums.take(12).forEach { album ->
+                        CollectionCard(
+                            title = album.title,
+                            subtitle = album.artist,
+                            artwork = album.artworkRef?.uri,
+                            onClick = { onOpenCollection(album) },
+                            modifier = Modifier.widthIn(min = 156.dp, max = 176.dp),
+                        )
+                    }
+                }
+            }
+        }
+        if (state.artists.isNotEmpty()) {
+            item(key = "explore-artists-heading") {
+                Text("Artists", style = MaterialTheme.typography.titleLargeEmphasized)
+            }
+            item(key = "explore-artists") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    state.artists.take(12).forEach { artist ->
+                        CollectionCard(
+                            title = artist.title,
+                            subtitle =
+                                pluralStringResource(
+                                    R.plurals.song_count,
+                                    artist.tracks.size,
+                                    artist.tracks.size,
+                                ),
+                            artwork = artist.artworkRef?.uri,
+                            onClick = { onOpenCollection(artist) },
+                            modifier = Modifier.widthIn(min = 156.dp, max = 176.dp),
+                        )
+                    }
+                }
+            }
+        }
+        if (state.folders.isNotEmpty()) {
+            item(key = "explore-folders-heading") {
+                Text("Folders", style = MaterialTheme.typography.titleLargeEmphasized)
+            }
+            item(key = "explore-folders") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
+                ) {
+                    state.folders.take(12).forEach { folder ->
+                        CollectionCard(
+                            title = folder.title,
+                            subtitle =
+                                pluralStringResource(
+                                    R.plurals.song_count,
+                                    folder.tracks.size,
+                                    folder.tracks.size,
+                                ),
+                            artwork = folder.artworkRef?.uri,
+                            onClick = { onOpenCollection(folder) },
+                            modifier = Modifier.widthIn(min = 156.dp, max = 176.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 private fun LibraryContent(
     state: LibraryState,
     onIntent: (LibraryIntent) -> Unit,
@@ -710,23 +817,7 @@ private fun ExploreMusicFeed(
                         )
                     }
 
-                state.albums.isNotEmpty() -> AlbumGrid(state.albums, onOpenCollection)
-                state.artists.isNotEmpty() ->
-                    CollectionList(state.artists, Icons.Rounded.Person, onOpenCollection)
-                state.folders.isNotEmpty() ->
-                    CollectionList(state.folders, Icons.Rounded.FolderOpen, onOpenCollection)
-
-                else ->
-                    CenteredPlaceholder {
-                        PlaceholderCard(
-                            title = stringResource(R.string.empty_library_title),
-                            description = stringResource(R.string.empty_library_description),
-                            icon = Icons.Rounded.LibraryMusic,
-                            actionText = stringResource(R.string.rescan_library),
-                            actionIcon = Icons.Rounded.Refresh,
-                            onAction = { onIntent(LibraryIntent.Refresh) },
-                        )
-                    }
+                else -> ExploreCollectionsFeed(state, onOpenCollection)
             }
         }
     }
@@ -869,9 +960,10 @@ private fun HomeMusicFeed(
     onBrowseLibrary: (LibraryTab) -> Unit,
 ) {
     val selecting = state.selecting
-    val recentlyAdded = remember(state.tracks) {
-        state.tracks.sortedByDescending { it.dateAddedEpochSeconds }.take(12)
-    }
+    val recentlyAdded =
+        remember(state.tracks) {
+            state.tracks.sortedByDescending { it.dateAddedEpochSeconds }.take(12)
+        }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding =
@@ -1071,7 +1163,8 @@ private fun HomeMusicFeed(
                                         overflow = TextOverflow.Ellipsis,
                                     )
                                     Text(
-                                        track.artist ?: stringResource(CoreUiR.string.unknown_artist),
+                                        track.artist
+                                            ?: stringResource(CoreUiR.string.unknown_artist),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
