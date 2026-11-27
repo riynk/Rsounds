@@ -82,9 +82,7 @@ fun TrackListItem(
         onLongClickLabel = stringResource(R.string.select),
         verticalAlignment = Alignment.CenterVertically,
         colors =
-            ListItemDefaults.segmentedColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+            ListItemDefaults.segmentedColors(containerColor = MaterialTheme.colorScheme.surface),
         leadingContent = { TrackArtwork(track, selected) },
         supportingContent = { TrackSubtitle(track) },
         trailingContent = {
