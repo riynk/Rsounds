@@ -2,6 +2,11 @@ name: Sync Metadator into Rsounds
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/sync-metadator.yml
   schedule:
     - cron: "0 3 * * 1"
 
